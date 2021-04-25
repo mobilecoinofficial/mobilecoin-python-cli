@@ -224,13 +224,15 @@ class Client:
 
     def build_transaction(self, account_id, amount, to_address, tombstone_block=None):
         amount = str(mob2pmob(amount))
+        params = {
+            "account_id": account_id,
+            "addresses_and_values": [(to_address, amount)],
+        }
+        if tombstone_block is not None:
+            params['tombstone_block'] = str(int(tombstone_block))
         r = self._req({
             "method": "build_transaction",
-            "params": {
-                "account_id": account_id,
-                "addresses_and_values": [(to_address, amount)],
-                "tombstone_block": str(int(tombstone_block)),
-            }
+            "params": params,
         })
         return r['tx_proposal']
 
